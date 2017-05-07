@@ -12,16 +12,17 @@ extern crate r2d2_diesel;
 
 mod static_files;
 mod task;
-mod post;
 mod db;
-// mod post_ctrl;
+mod post;
+// mod magnet;
 
 use rocket::request::{Form, FlashMessage};
 use rocket::response::{Flash, Redirect};
 use rocket_contrib::Template;
 
 use task::Task;
-use post::controller;
+use post::{controller as post_controller};
+// use magnet::{controller as magnet_controller};
 
 #[derive(Debug, Serialize)]
 struct Context<'a, 'b>{ msg: Option<(&'a str, &'b str)>, tasks: Vec<Task> }
@@ -79,7 +80,8 @@ fn todo(msg: Option<FlashMessage>, conn: db::Conn) -> Template {
 fn main() {
     rocket::ignite()
         .manage(db::init_pool())
-        .mount("/", routes![controller::index, static_files::all])
+        .mount("/", routes![post_controller::index, static_files::all])
+//         .mount("/magnet", routes![magnet_controller::list])
         .mount("/todo", routes![todo])
         .mount("/todo/", routes![new, toggle, delete])
         .launch();

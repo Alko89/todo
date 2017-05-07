@@ -2,6 +2,6 @@
 
 pub mod controller;
 
-mod post;
+mod magnet;
 
-pub use self::post::Post;
+pub use self::magnet::Magnet;

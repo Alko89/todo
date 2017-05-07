@@ -2,27 +2,30 @@ use diesel;
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 
-use self::schema::posts;
-use self::schema::posts::dsl::{posts as all_posts, published as post_published};
+use self::schema::magnets;
+use self::schema::magnets::dsl::{magnets as all_magnets};
 
 mod schema {
     infer_schema!("env:DATABASE_URL");
 }
 
-#[table_name = "posts"]
+#[table_name = "magnets"]
 #[derive(Serialize, Queryable, Insertable, FromForm, Debug, Clone)]
-pub struct Post {
+pub struct Magnet {
     pub id: Option<i32>,
-    pub title: String,
-    pub body: String,
-    pub published: bool,
+    pub magnet: String,
+    pub seeders: Option<i32>,
+    pub leechers: Option<i32>,
+    pub name: String,
+    pub website_source: String,
+    pub url: String,
+    pub size: String,
 }
 
 
-impl Post {
-    pub fn all(conn: &SqliteConnection) -> Vec<Post> {
-//         all_posts.filter(post_published.eq(true)).load::<Post>(conn).unwrap()
-        all_posts.order(posts::id.desc()).load::<Post>(conn).unwrap()
+impl Magnet {
+    pub fn all(conn: &SqliteConnection) -> Vec<Magnet> {
+        all_magnets.order(magnets::id.desc()).load::<Magnet>(conn).unwrap()
     }
 
 //     pub fn insert(&self, conn: &SqliteConnection) -> bool {

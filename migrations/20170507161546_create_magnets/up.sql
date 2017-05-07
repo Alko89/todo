@@ -1,6 +1,10 @@
-CREATE TABLE posts (
+CREATE TABLE magnets (
   id INTEGER PRIMARY KEY,
-  title VARCHAR NOT NULL,
-  body TEXT NOT NULL,
-  published BOOLEAN NOT NULL DEFAULT 0
+  magnet TEXT,
+  seeders INTEGER,
+  leechers INTEGER,
+  name TEXT,
+  website_source VARCHAR,
+  url TEXT,
+  size VARCHAR
 )
