@@ -23,6 +23,7 @@ following:**
 
     ```
     cargo install diesel_cli                      # install diesel CLI tools
+    mkdir db                                      # create db folder
     DATABASE_URL=db/db.sql diesel migration run   # create db/db.sql
     ```
 
