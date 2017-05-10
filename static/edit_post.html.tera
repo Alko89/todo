@@ -1,6 +1,7 @@
 {% extends "master" %}
 
 {% block header %}
+<script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
 {% endblock header %}
 
 {% block content %}
@@ -17,4 +18,8 @@
         </div>
         </div>
     {% endfor %}
+        <textarea name="editor1"></textarea>
+        <script>
+            CKEDITOR.replace( 'editor1' );
+        </script>
 {% endblock content %}

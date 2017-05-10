@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="/css/skeleton.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="icon" type="image/png" href="/images/favicon.png">
+  
+  {% block header %}{% endblock header %}
+
 </head>
 <body>
   <div class="container">

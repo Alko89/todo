@@ -13,18 +13,18 @@ struct Context<'a, 'b>{ msg: Option<(&'a str, &'b str)>, posts: Vec<Post> }
 
 impl<'a, 'b> Context<'a, 'b> {
     pub fn err(conn: &db::Conn, msg: &'a str) -> Context<'static, 'a> {
-        Context{msg: Some(("error", msg)), posts: Post::all(conn)}
+        Context{msg: Some(("error", msg)), posts: Post::post(1, conn)}
     }
 
     pub fn raw(conn: &db::Conn, msg: Option<(&'a str, &'b str)>) -> Context<'a, 'b> {
-        Context{msg: msg, posts: Post::all(conn)}
+        Context{msg: msg, posts: Post::post(1, conn)}
     }
 }
 
 
 
 #[get("/")]
-fn index(msg: Option<FlashMessage>, conn: db::Conn) -> Template {
+fn post(msg: Option<FlashMessage>, conn: db::Conn) -> Template {
     Template::render("index",
         &match msg {
         Some(ref msg) => Context::raw(&conn, Some((msg.name(), msg.msg()))),

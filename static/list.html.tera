@@ -1,0 +1,18 @@
+{% extends "master" %}
+
+{% block content %}
+    <div class="row">
+      <h4>Rocket Todo</h4>
+    </div>
+
+    <div class="row">
+      <div class="twelve columns">
+        <ul>
+        {% for magnet in magnets %}
+              <span>{{ magnet.magnet }}</span>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+{% endblock content %}

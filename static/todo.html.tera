@@ -1,4 +1,4 @@
-{% extends "base" %}
+{% extends "master" %}
 
 {% block content %}
     <p><!--Nothing to see here --></p>

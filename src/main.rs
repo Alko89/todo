@@ -80,7 +80,7 @@ fn todo(msg: Option<FlashMessage>, conn: db::Conn) -> Template {
 fn main() {
     rocket::ignite()
         .manage(db::init_pool())
-        .mount("/", routes![post_controller::index, static_files::all])
+        .mount("/", routes![post_controller::post, static_files::all])
 //         .mount("/magnet", routes![magnet_controller::list])
         .mount("/todo", routes![todo])
         .mount("/todo/", routes![new, toggle, delete])
