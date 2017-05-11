@@ -3,7 +3,7 @@ use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 
 use self::schema::posts;
-use self::schema::posts::dsl::{posts as all_posts, published as post_published, title as post_title, body as post_body};
+use self::schema::posts::dsl::{posts as all_posts, published as post_published/*, title as post_title, body as post_body*/};
 
 mod schema {
     infer_schema!("env:DATABASE_URL");
@@ -20,10 +20,15 @@ pub struct Post {
 
 
 impl Post {
-//     pub fn all(conn: &SqliteConnection) -> Vec<Post> {
-// //         all_posts.filter(post_published.eq(true)).load::<Post>(conn).unwrap()
-//         all_posts.order(posts::id.desc()).load::<Post>(conn).unwrap()
-//     }
+    pub fn all(conn: &SqliteConnection) -> Vec<Post> {
+//         all_posts.filter(post_published.eq(true)).load::<Post>(conn).unwrap()
+        all_posts.order(posts::id.desc()).load::<Post>(conn).unwrap()
+    }
+    
+    pub fn get_titles(conn: &SqliteConnection) -> Vec<String> {
+//         all_posts.order(posts::id.desc()).load::<Post>(conn).unwrap().title
+        posts::table.select(posts::title).load(conn).unwrap()
+    }
     
     pub fn post(id: i32, conn: &SqliteConnection) -> Vec<Post> {
         all_posts.find(id).load::<Post>(conn).unwrap()

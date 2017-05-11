@@ -17,6 +17,7 @@ struct Context<'a, 'b>
 
 {
     msg: Option<(&'a str, &'b str)>,
+    titles: Vec<Post>,
     posts: Vec<Post>
 }
 
@@ -24,14 +25,24 @@ impl<'a, 'b> Context<'a, 'b> {
     pub fn err(id: i32, conn: &db::Conn, msg: &'a str) -> Context<'static, 'a> {
         Context{
             msg: Some(("error", msg)),
+            titles: Post::all(conn),
             posts: Post::post(id, conn)
         }
     }
 
-    pub fn raw(id: i32, conn: &db::Conn, msg: Option<(&'a str, &'b str)>) -> Context<'a, 'b> {
+    pub fn one(id: i32, conn: &db::Conn, msg: Option<(&'a str, &'b str)>) -> Context<'a, 'b> {
         Context{
             msg: msg,
+            titles: Post::all(conn),
             posts: Post::post(id, conn)
+        }
+    }
+
+    pub fn all(conn: &db::Conn, msg: Option<(&'a str, &'b str)>) -> Context<'a, 'b> {
+        Context{
+            msg: msg,
+            titles: Post::all(conn),
+            posts: Post::all(conn)
         }
     }
 }
@@ -42,8 +53,8 @@ impl<'a, 'b> Context<'a, 'b> {
 fn post(msg: Option<FlashMessage>, conn: db::Conn) -> Template {
     Template::render("index",
         &match msg {
-        Some(ref msg) => Context::raw(1, &conn, Some((msg.name(), msg.msg()))),
-        None => Context::raw(1, &conn, None),
+        Some(ref msg) => Context::one(1, &conn, Some((msg.name(), msg.msg()))),
+        None => Context::one(1, &conn, None),
         })
 }
 
@@ -51,16 +62,16 @@ fn post(msg: Option<FlashMessage>, conn: db::Conn) -> Template {
 fn view_post(id: i32  ,msg: Option<FlashMessage>, conn: db::Conn) -> Template {
     Template::render("index",
         &match msg {
-        Some(ref msg) => Context::raw(id, &conn, Some((msg.name(), msg.msg()))),
-        None => Context::raw(id, &conn, None),
+        Some(ref msg) => Context::one(id, &conn, Some((msg.name(), msg.msg()))),
+        None => Context::one(id, &conn, None),
         })
 }
 
 #[get("/new")]
 fn new_post(msg: Option<FlashMessage>, conn: db::Conn) -> Template {
      Template::render("edit_post", &match msg {
-        Some(ref msg) => Context::raw(1, &conn, Some((msg.name(), msg.msg()))),
-        None => Context::raw(1, &conn, None),
+        Some(ref msg) => Context::one(1, &conn, Some((msg.name(), msg.msg()))),
+        None => Context::one(1, &conn, None),
         })
 }
 

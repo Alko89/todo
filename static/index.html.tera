@@ -3,22 +3,21 @@
 {% block header %}
 {% endblock header %}
 
+{% block menu %}
+    {% for title in titles %}
+        <li class="pure-menu-item"><a href="/post/{{ title.id }}" class="pure-menu-link">{{ title.title }}</a></li>
+    {% endfor %}
+{% endblock menu %}
+
 {% block content %}
     {% for post in posts %}
-        <div class="row">
-        <h4>{{ post.title }}</h4>
+        <div class="header">
+            <h1>{{ post.title }}</h1>
+            <h2>A subtitle for your page goes here</h2>
         </div>
-          {% if msg %}
-            <small class="field-{{msg.0}}-msg">
-              {{ msg.1 }}
-            </small>
-          {% endif %}
-        <div class="row">
-        <div class="twelve columns">
-            <ul>
-                <span>{{ post.body | safe }}</span>
-            </ul>
-        </div>
+
+        <div class="content">
+            {{ post.body | safe }}
         </div>
     {% endfor %}
 {% endblock content %}
