@@ -1,18 +1,41 @@
 {% extends "master" %}
 
 {% block content %}
-    <div class="row">
-      <h4>Rocket Todo</h4>
-    </div>
+        <div class="header">
+            <h1>Magnets</h1>
+            <h2>Table of magnet links</h2>
+        </div>
 
-    <div class="row">
-      <div class="twelve columns">
-        <ul>
-        {% for magnet in magnets %}
-              <span>{{ magnet.magnet }}</span>
-        {% endfor %}
-        </ul>
-      </div>
-    </div>
-
+        <div class="content">
+            <table class="pure-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Seeders</th>
+                        <th>Leechers</th>
+                        <th>Magnet</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for magnet in magnets %}
+                    <tr>
+                        <th>{{ magnet.name }}</th>
+                        <th>{{ magnet.size }}</th>
+                        <th>{{ magnet.seeders }}</th>
+                        <th>{{ magnet.leechers }}</th>
+                        <th>
+                            <a href="{{ magnet.magnet }}">
+                                <img src="/images/icon-magnet.png" width="30" height="30" />
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ magnet.url }}">{{ magnet.website_source }}</a>
+                        </th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 {% endblock content %}

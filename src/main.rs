@@ -14,7 +14,7 @@ mod static_files;
 mod task;
 mod db;
 mod post;
-// mod magnet;
+mod magnet;
 
 use rocket::request::{Form, FlashMessage};
 use rocket::response::{Flash, Redirect};
@@ -22,7 +22,7 @@ use rocket_contrib::Template;
 
 use task::Task;
 use post::{controller as post_controller};
-// use magnet::{controller as magnet_controller};
+use magnet::{controller as magnet_controller};
 
 #[derive(Debug, Serialize)]
 struct Context<'a, 'b>{ msg: Option<(&'a str, &'b str)>, tasks: Vec<Task> }
@@ -81,9 +81,8 @@ fn main() {
     rocket::ignite()
         .manage(db::init_pool())
         .mount("/", routes![post_controller::post, static_files::all])
-        .mount("/", routes![post_controller::new_post, post_controller::add_post, post_controller::view_post, post_controller::edit_post, post_controller::update_post])
-//         .mount("/post/", routes![post_controller::add_post])
-//         .mount("/magnet", routes![magnet_controller::list])
+        .mount("/", routes![post_controller::add_post, post_controller::new_post, post_controller::view_post, post_controller::edit_post, post_controller::update_post])
+        .mount("/magnet", routes![magnet_controller::list])
         .mount("/todo", routes![todo])
         .mount("/todo/", routes![new, toggle, delete])
         .launch();

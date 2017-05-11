@@ -11,7 +11,6 @@ use post::Post;
 
 #[derive(Debug, Serialize)]
 struct Context<'a, 'b> 
-
 {
     msg: Option<(&'a str, &'b str)>,
     titles: Vec<Post>,
@@ -19,27 +18,11 @@ struct Context<'a, 'b>
 }
 
 impl<'a, 'b> Context<'a, 'b> {
-    pub fn err(id: i32, conn: &db::Conn, msg: &'a str) -> Context<'static, 'a> {
-        Context{
-            msg: Some(("error", msg)),
-            titles: Post::all(conn),
-            posts: Post::post(id, conn)
-        }
-    }
-
     pub fn one(id: i32, conn: &db::Conn, msg: Option<(&'a str, &'b str)>) -> Context<'a, 'b> {
         Context{
             msg: msg,
             titles: Post::all(conn),
             posts: Post::post(id, conn)
-        }
-    }
-
-    pub fn all(conn: &db::Conn, msg: Option<(&'a str, &'b str)>) -> Context<'a, 'b> {
-        Context{
-            msg: msg,
-            titles: Post::all(conn),
-            posts: Post::all(conn)
         }
     }
 }
