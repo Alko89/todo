@@ -1,12 +1,9 @@
 extern crate rocket;
 extern crate rocket_contrib;
-// extern crate tera;
 
 use rocket::request::{Form, FlashMessage};
 use rocket::response::{Flash, Redirect};
 use rocket_contrib::Template;
-
-// use self::tera::Context;
 
 use db;
 use post::Post;
@@ -67,16 +64,44 @@ fn view_post(id: i32  ,msg: Option<FlashMessage>, conn: db::Conn) -> Template {
         })
 }
 
-#[get("/new")]
-fn new_post(msg: Option<FlashMessage>, conn: db::Conn) -> Template {
-     Template::render("edit_post", &match msg {
+#[get("/add")]
+fn add_post(msg: Option<FlashMessage>, conn: db::Conn) -> Template {
+     Template::render("add_post", &match msg {
         Some(ref msg) => Context::one(1, &conn, Some((msg.name(), msg.msg()))),
         None => Context::one(1, &conn, None),
         })
 }
 
-#[post("/add", data = "<post_form>")]
-fn add_post(post_form: Form<Post>, conn: db::Conn) -> Flash<Redirect> {
+#[post("/new", data = "<post_form>")]
+fn new_post(post_form: Form<Post>, conn: db::Conn) -> Flash<Redirect> {
+    let post = post_form.into_inner();
+    if post.title.is_empty()
+    {
+        Flash::error(Redirect::to("/add"), "Title cannot be empty.")
+    }
+    else if post.body.is_empty()
+    {
+        Flash::error(Redirect::to("/add"), "Body cannot be empty.")
+    } 
+    else if post.insert(&conn)
+    {
+        Flash::success(Redirect::to("/post/1"), "Post successfully added.")
+    } else
+    {
+        Flash::error(Redirect::to("/add"), "Whoops! The server failed.")
+    }
+}
+
+#[get("/edit/<id>")]
+fn edit_post(id: i32, msg: Option<FlashMessage>, conn: db::Conn) -> Template {
+     Template::render("edit_post", &match msg {
+        Some(ref msg) => Context::one(id, &conn, Some((msg.name(), msg.msg()))),
+        None => Context::one(id, &conn, None),
+        })
+}
+
+#[post("/update", data = "<post_form>")]
+fn update_post(post_form: Form<Post>, conn: db::Conn) -> Flash<Redirect> {
     let post = post_form.into_inner();
     if post.title.is_empty()
     {
@@ -86,9 +111,9 @@ fn add_post(post_form: Form<Post>, conn: db::Conn) -> Flash<Redirect> {
     {
         Flash::error(Redirect::to("/new"), "Body cannot be empty.")
     } 
-    else if post.insert(&conn)
+    else if Post::update(post.id.unwrap(), post.body, &conn)
     {
-        Flash::success(Redirect::to("/post/1"), "Post successfully added.")
+        Flash::success(Redirect::to(&format!("/post/{}", post.id.unwrap())), "Post successfully updated.")
     } else
     {
         Flash::error(Redirect::to("/new"), "Whoops! The server failed.")

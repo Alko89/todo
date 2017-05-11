@@ -3,7 +3,7 @@ use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 
 use self::schema::posts;
-use self::schema::posts::dsl::{posts as all_posts, published as post_published/*, title as post_title, body as post_body*/};
+// use self::schema::posts::dsl::{posts as all_posts, published as post_published};
 
 mod schema {
     infer_schema!("env:DATABASE_URL");
@@ -21,39 +21,39 @@ pub struct Post {
 
 impl Post {
     pub fn all(conn: &SqliteConnection) -> Vec<Post> {
-//         all_posts.filter(post_published.eq(true)).load::<Post>(conn).unwrap()
-        all_posts.order(posts::id.desc()).load::<Post>(conn).unwrap()
+        posts::table.order(posts::id.desc()).load::<Post>(conn).unwrap()
     }
     
     pub fn get_titles(conn: &SqliteConnection) -> Vec<String> {
-//         all_posts.order(posts::id.desc()).load::<Post>(conn).unwrap().title
         posts::table.select(posts::title).load(conn).unwrap()
     }
     
     pub fn post(id: i32, conn: &SqliteConnection) -> Vec<Post> {
-        all_posts.find(id).load::<Post>(conn).unwrap()
+        posts::table.find(id).load::<Post>(conn).unwrap()
     }
 
     pub fn insert(&self, conn: &SqliteConnection) -> bool {
         diesel::insert(self).into(posts::table).execute(conn).is_ok()
     }
 
-//     pub fn update(&self, conn: &SqliteConnection) -> bool {
-//         diesel::update(all_posts.find(self.id)).set(self).execute(conn).is_ok()
-//     }
+    pub fn update(id: i32, body: String, conn: &SqliteConnection) -> bool {
+        diesel::update(posts::table.filter(posts::id.eq(id)))
+            .set(posts::body.eq(body))
+            .execute(conn).is_ok()
+    }
 
     pub fn toggle_with_id(id: i32, conn: &SqliteConnection) -> bool {
-        let post = all_posts.find(id).get_result::<Post>(conn);
+        let post = posts::table.find(id).get_result::<Post>(conn);
         if post.is_err() {
             return false;
         }
 
         let new_status = !post.unwrap().published;
-        let updated_post = diesel::update(all_posts.find(id));
-        updated_post.set(post_published.eq(new_status)).execute(conn).is_ok()
+        let updated_post = diesel::update(posts::table.find(id));
+        updated_post.set(posts::published.eq(new_status)).execute(conn).is_ok()
     }
 
     pub fn delete_with_id(id: i32, conn: &SqliteConnection) -> bool {
-        diesel::delete(all_posts.find(id)).execute(conn).is_ok()
+        diesel::delete(posts::table.find(id)).execute(conn).is_ok()
     }
 }
