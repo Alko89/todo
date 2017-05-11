@@ -81,6 +81,8 @@ fn main() {
     rocket::ignite()
         .manage(db::init_pool())
         .mount("/", routes![post_controller::post, static_files::all])
+        .mount("/", routes![post_controller::new_post, post_controller::add_post, post_controller::view_post])
+//         .mount("/post/", routes![post_controller::add_post])
 //         .mount("/magnet", routes![magnet_controller::list])
         .mount("/todo", routes![todo])
         .mount("/todo/", routes![new, toggle, delete])

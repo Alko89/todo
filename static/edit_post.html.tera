@@ -5,21 +5,23 @@
 {% endblock header %}
 
 {% block content %}
-    {% for post in posts %}
-        <div class="row">
-        <h4>{{ post.title }}</h4>
+    <form action="/add" method="post">
+        <div class="ten columns">
+            <input type="text" placeholder="post title"
+                name="title" id="title" value="" autofocus
+                class="u-full-width {% if msg %}field-{{msg.0}}{% endif %}" />
+            {% if msg %}
+                <small class="field-{{msg.0}}-msg">
+                {{ msg.1 }}
+                </small>
+            {% endif %}
         </div>
-
-        <div class="row">
-        <div class="twelve columns">
-            <ul>
-                <span>{{ post.body }}</span>
-            </ul>
+        <div class="two columns">
+            <input type="submit" value="add post">
         </div>
-        </div>
-    {% endfor %}
-        <textarea name="editor1"></textarea>
+        <textarea name="body"></textarea>
         <script>
-            CKEDITOR.replace( 'editor1' );
+            CKEDITOR.replace( 'body' );
         </script>
+    </form>
 {% endblock content %}

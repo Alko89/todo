@@ -41,4 +41,3 @@ impl Task {
         diesel::delete(all_tasks.find(id)).execute(conn).is_ok()
     }
 }
-

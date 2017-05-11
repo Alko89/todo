@@ -8,11 +8,15 @@
         <div class="row">
         <h4>{{ post.title }}</h4>
         </div>
-
+          {% if msg %}
+            <small class="field-{{msg.0}}-msg">
+              {{ msg.1 }}
+            </small>
+          {% endif %}
         <div class="row">
         <div class="twelve columns">
             <ul>
-                <span>{{ post.body }}</span>
+                <span>{{ post.body | safe }}</span>
             </ul>
         </div>
         </div>
