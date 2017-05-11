@@ -82,7 +82,8 @@ fn main() {
         .manage(db::init_pool())
         .mount("/", routes![post_controller::post, static_files::all])
         .mount("/", routes![post_controller::add_post, post_controller::new_post, post_controller::view_post, post_controller::edit_post, post_controller::update_post])
-        .mount("/magnet", routes![magnet_controller::list])
+        .mount("/magnet", routes![magnet_controller::list, magnet_controller::search])
+//         .mount("/magnet/", routes![magnet_controller::search])
         .mount("/todo", routes![todo])
         .mount("/todo/", routes![new, toggle, delete])
         .launch();

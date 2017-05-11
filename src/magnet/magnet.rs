@@ -10,7 +10,7 @@ mod schema {
 }
 
 #[table_name = "magnets"]
-#[derive(Serialize, Queryable, Insertable, FromForm, Debug, Clone)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, FromForm, Debug, Clone)]
 pub struct Magnet {
     pub id: Option<i32>,
     pub magnet: String,
@@ -29,6 +29,17 @@ impl Magnet {
     pub fn all(conn: &SqliteConnection) -> Vec<Magnet> {
         magnets::table.order(magnets::id.desc()).load::<Magnet>(conn).unwrap()
     }
+
+    pub fn count(/*query: &String,*/ conn: &SqliteConnection) -> i64 {
+//         magnets::table.filter(magnets::name.like(&query)).count().first(conn).unwrap()
+
+        magnets::table.count().first(conn).unwrap()
+    }
+
+//     pub fn search(, conn: &SqliteConnection) -> Vec<Magnet> {
+//     
+//         magnets::table.order(magnets::id.desc()).load::<Magnet>(conn).unwrap()
+//     }
 
     pub fn insert(&self, conn: &SqliteConnection) -> bool {
         diesel::insert(self).into(magnets::table).execute(conn).is_ok()
