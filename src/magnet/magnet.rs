@@ -30,16 +30,30 @@ impl Magnet {
         magnets::table.order(magnets::id.desc()).load::<Magnet>(conn).unwrap()
     }
 
-    pub fn count(/*query: &String,*/ conn: &SqliteConnection) -> i64 {
-//         magnets::table.filter(magnets::name.like(&query)).count().first(conn).unwrap()
-
-        magnets::table.count().first(conn).unwrap()
+    pub fn count(query: &String, conn: &SqliteConnection) -> i64 {
+        if query.trim() == "" {
+            magnets::table.count()
+                .first(conn).unwrap()
+        }
+        else {
+            magnets::table.filter(magnets::name.like(format!("%{}%", query))).count()
+                .first(conn).unwrap()
+        }
     }
 
-//     pub fn search(, conn: &SqliteConnection) -> Vec<Magnet> {
-//     
-//         magnets::table.order(magnets::id.desc()).load::<Magnet>(conn).unwrap()
-//     }
+    pub fn search(query: &String, page: i32, size: i32, conn: &SqliteConnection) -> Vec<Magnet> {
+        if query.trim() == "" {
+            magnets::table.limit(size as i64).offset((page * size) as i64)
+                .order(magnets::id.desc())
+                .load::<Magnet>(conn).unwrap()
+        }
+        else {
+            magnets::table.filter(magnets::name.like(format!("%{}%", query)))
+                .limit(size as i64).offset((page * size) as i64)
+                .order(magnets::id.desc())
+                .load::<Magnet>(conn).unwrap()
+        }
+    }
 
     pub fn insert(&self, conn: &SqliteConnection) -> bool {
         diesel::insert(self).into(magnets::table).execute(conn).is_ok()

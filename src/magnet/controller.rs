@@ -11,7 +11,7 @@ use magnet::Magnet;
 struct Message {
     search_string: String,
     magnets_total: i64,
-    magnets_filtered: i32,
+    magnets_filtered: i64,
     magnets: Vec<Magnet>
 }
 
@@ -34,12 +34,12 @@ fn list(conn: db::Conn) -> Template {
     Template::render("list", &Context::all(&conn))
 }
 
-#[get("/search/<query>/<from>/<to>")]
-fn search(query: String, from: i32, to: i32, conn: db::Conn) -> JSON<Message> {
+#[get("/search/<query>/<page>/<size>")]
+fn search(query: String, page: i32, size: i32, conn: db::Conn) -> JSON<Message> {
     JSON(Message{
-        search_string: query,
-        magnets_total: Magnet::count(&conn),
-        magnets_filtered: from + to,
-        magnets: Magnet::all(&conn)
+        search_string: query.clone(),
+        magnets_total: Magnet::count(&String::from(""), &conn),
+        magnets_filtered: Magnet::count(&query, &conn),
+        magnets: Magnet::search(&query, page, size, &conn)
     })
 }
