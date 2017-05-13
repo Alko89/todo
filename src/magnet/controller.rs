@@ -1,7 +1,9 @@
 extern crate rocket;
 // extern crate rocket_contrib;
 extern crate serde_json;
+extern crate tera;
 
+use self::tera::Context;
 use rocket_contrib::{Template, JSON};
 
 use db;
@@ -15,23 +17,23 @@ struct Message {
     magnets: Vec<Magnet>
 }
 
-#[derive(Debug, Serialize)]
-struct Context {
-    magnets: Vec<Magnet>
-}
-
-impl Context {
-    pub fn all(conn: &db::Conn) -> Context {
-        Context{
-            magnets: Magnet::all(conn)
-        }
-    }
-}
+// #[derive(Debug, Serialize)]
+// struct Context {
+//     magnets: Vec<Magnet>
+// }
+// 
+// impl Context {
+//     pub fn all(conn: &db::Conn) -> Context {
+//         Context{
+//             magnets: Magnet::all(conn)
+//         }
+//     }
+// }
 
 
 #[get("/")]
-fn list(conn: db::Conn) -> Template {
-    Template::render("list", &Context::all(&conn))
+fn list() -> Template {
+    Template::render("list", &Context::new())
 }
 
 #[get("/search/<query>/<page>/<size>")]

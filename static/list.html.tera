@@ -7,12 +7,17 @@
 
 {% block content %}
         <div class="header">
-            <h1>Magnets</h1>
-            <h2>Table of magnet links</h2>
+            <!--<h1>Magnets</h1>
+            <h2>Table of magnet links</h2>-->
+            <h2>
+                <form class="pure-form">
+                    <input class="pure-input-1" type="text" id="search" placeholder="Search"/>
+                </form>
+            </h2>
         </div>
 
         <div class="content">
-            <table class="pure-table">
+            <table class="pure-table" id="table">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -24,22 +29,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for magnet in magnets %}
-                    <tr>
-                        <th>{{ magnet.name }}</th>
-                        <th>{{ magnet.size }}</th>
-                        <th>{{ magnet.seeders }}</th>
-                        <th>{{ magnet.leechers }}</th>
-                        <th>
-                            <a href="{{ magnet.magnet }}">
-                                <img src="/images/icon-magnet.png" width="30" height="30" />
-                            </a>
-                        </th>
-                        <th>
-                            <a href="{{ magnet.url }}">{{ magnet.website_source }}</a>
-                        </th>
-                    </tr>
-                    {% endfor %}
                 </tbody>
             </table>
         </div>

@@ -69,7 +69,8 @@ fn new_post(post_form: Form<Post>, conn: db::Conn) -> Flash<Redirect> {
     else if post.insert(&conn)
     {
         Flash::success(Redirect::to("/post/1"), "Post successfully added.")
-    } else
+    } 
+    else
     {
         Flash::error(Redirect::to("/add"), "Whoops! The server failed.")
     }
@@ -97,7 +98,8 @@ fn update_post(post_form: Form<Post>, conn: db::Conn) -> Flash<Redirect> {
     else if Post::update(post.id.unwrap(), post.body, &conn)
     {
         Flash::success(Redirect::to(&format!("/post/{}", post.id.unwrap())), "Post successfully updated.")
-    } else
+    } 
+    else
     {
         Flash::error(Redirect::to("/new"), "Whoops! The server failed.")
     }
